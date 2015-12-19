@@ -12,21 +12,19 @@ namespace WindowsFormsApplication1
 {
     public partial class Form1 : Form
     {
-        //public string display { get; set; }
-
         private static double currVal = 0;
         private static double tempVal = 0;
+        private static double historyValue = 0;
         private static int lastPressed = 0;
-
-        public static bool firstTime = true;
+        private static bool firstTime = true;
         StringBuilder sb = new StringBuilder();
-              
+                   
         public Form1()
         {
             InitializeComponent();
         }
 
-#region [HELPER FUNCTIONS]
+#region HELPER FUNCTIONS
         //This function will take whatever number key is press and add it so the screen via 
         //stringbuilder, then it will take whatever is on the screen and assign it to the tempVal
         //so that if a calculation is done after this, the current number on screen can be processed
@@ -37,6 +35,35 @@ namespace WindowsFormsApplication1
             tempVal = Convert.ToDouble(sb.ToString());
         }
 
+        //sets a tempVal thats used for various purposes, based on whether or not this is an ongoing calculation or a new calculation.
+        private void tempValLogic()
+        {
+            try
+            {
+                tempVal = Convert.ToDouble(sb.ToString());
+            }
+            catch
+            {
+                if (firstTime)
+                    tempVal = 0;
+                if (!firstTime)
+                    tempVal = historyValue;
+            }
+        }
+
+        //This function performs all the logic that takes place when the =,-,*,/ button gets hit
+        private void operatorButtonLogic(int lastPressParam)
+        {
+            tempValLogic();
+            firstTime = false;
+            currVal = calculateFromLast(currVal, tempVal, lastPressed);
+            currVal = Math.Round(currVal, 5);
+            historyValue = currVal;
+            ScreenDisplay.Text = currVal.ToString();
+            lastPressed = lastPressParam;
+            sb.Clear();
+        }
+
         //This function takes the last operation button pressed along with the current numbers and computes them.
         //It is set up like this so that it calculates your last 2 numbers using the operation between them and not
         //the current operation being pressed. For example, if you pressed the following [4]->[+]->[10]->[-]..... when
@@ -45,37 +72,39 @@ namespace WindowsFormsApplication1
         private static double calculateFromLast(double temp, double curr, int lastPressed)
         {
             //PERFORMS CALCULATION BASED ON OPERATION IN BETWEEN LAST 2 NUMBERS.
-
             switch (lastPressed)
-            {
-                case 1:
-                    curr += temp;
-                    break;
-                case 2:
-                    curr -= temp;
-                    break;
-                case 3:
-                    curr = curr * temp;
-                    break;
-                case 4:
-                    try
-                    {
-                        curr = curr / temp;
-                    }
-                    catch (DivideByZeroException ex)
-                    {
-                        MessageBox.Show("Unable to divide by zero, please try again");
-                    }
-                    break;
-                default:
-                    break;                     
-            }
+                {
+                    case 1:
+                        curr = temp + curr;
+                        break;
+                    case 2:
+                        curr = temp - curr;
+                        break;
+                    case 3:
+                        try
+                        {
+                        curr = temp / curr; ;
+                        }
+                        catch (DivideByZeroException ex)
+                        {
+                            MessageBox.Show("Unable to divide by zero, please try again");
+                        }
+                        break;
+                    case 4:
+                        curr = temp * curr;
+                        break;
+
+                    case 0:
+                        break;
+                    default:
+                        break;
+                }
 
             return curr;
         }
 #endregion
 
-#region [NUMBER BUTTONS]
+#region NUMBER BUTTONS
 
         //1 BUTTON
         private void button1_Click(object sender, EventArgs e)
@@ -144,107 +173,56 @@ namespace WindowsFormsApplication1
             Random randNum = new Random();
             this.buttonPressed(Convert.ToInt32(randNum.Next(1, 5000)));
         }
-#endregion
+        #endregion
 
-#region [OPERATION BUTTONS]
+#region OPERATION BUTTONS
+
         //PLUS BUTTON
         private void button14_Click(object sender, EventArgs e)
         {
-            //using a tempVal in try/catch to avoid exceptions if the current SB string is not a valid number
-            try
-            {
-                tempVal = Convert.ToDouble(sb.ToString());
-            }
-            catch
-            {
-                tempVal = 0;
-            }
-            currVal = calculateFromLast(currVal, tempVal, lastPressed);
-            
-            ScreenDisplay.Text = currVal.ToString();
-            lastPressed = 1;
-            sb.Clear();
+            operatorButtonLogic(1);
         }
-
         //MINUS BUTTON
         private void button12_Click(object sender, EventArgs e)
         {
-            //using a tempVal in try/catch to avoid exceptions if the current SB string is not a valid number
-            try
-            {
-                tempVal = Convert.ToDouble(sb.ToString());
-            }
-            catch
-            {
-                tempVal = 0;
-            }
-            currVal = calculateFromLast(currVal, tempVal, lastPressed);
-
-            ScreenDisplay.Text = currVal.ToString();
-            lastPressed = 2;
-            sb.Clear();
+            operatorButtonLogic(2);
         }
-
-        //MULTIPLY BUTTON
-        private void button15_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                tempVal = Convert.ToDouble(sb.ToString());
-            }
-            catch
-            {
-                tempVal = 0;
-            }
-            currVal = calculateFromLast(currVal, tempVal, lastPressed);
-
-            ScreenDisplay.Text = currVal.ToString();
-            lastPressed = 4;
-            sb.Clear();
-        }
-
         //DIVIDE BUTTON
         private void button13_Click(object sender, EventArgs e)
         {
-            try
-            {
-                tempVal = Convert.ToDouble(sb.ToString());
-            }
-            catch
-            {
-                tempVal = 0;
-            }
-            currVal = calculateFromLast(currVal, tempVal, lastPressed);
-
-            ScreenDisplay.Text = currVal.ToString();
-            lastPressed = 3;
-            sb.Clear();
+            operatorButtonLogic(3);
+        }
+        //MULTIPLY BUTTON
+        private void button15_Click(object sender, EventArgs e)
+        {
+            operatorButtonLogic(4);
         }
         //EQUALS BUTTON - Calculates based on last 3 buttons pressed (2 numbers and operation in between them)
         private void button10_Click_1(object sender, EventArgs e)
         {
             currVal = calculateFromLast(currVal, tempVal, lastPressed);
-
+            currVal = Math.Round(currVal, 5);
+            firstTime = false;
             ScreenDisplay.Text = currVal.ToString();
+            historyValue = currVal;
             sb.Clear();
             lastPressed = 0;
         }
 
 #endregion
 
-#region [MISC BUTTONS]
         //CLEAR BUTTON - resets the text box, clears string builder and resets
         //the values.
         private void button16_Click(object sender, EventArgs e)
         {
             ScreenDisplay.Text = "0";
+            firstTime = true;
             currVal = 0;
             tempVal = 0;
             lastPressed = 0;
             sb.Clear();
         }
-#endregion
-        
+
     }
     
 }

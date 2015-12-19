@@ -16,3 +16,12 @@ C:\Users\Owner\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\obj\Deb
 C:\Users\Owner\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
 C:\Users\Owner\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
 C:\Users\Owner\Desktop\WindowsFormsApplication1\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+H:\GitHub\CS--GUI-Calculator\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe.config
+H:\GitHub\CS--GUI-Calculator\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.exe
+H:\GitHub\CS--GUI-Calculator\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.pdb
+H:\GitHub\CS--GUI-Calculator\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.exe
+H:\GitHub\CS--GUI-Calculator\WindowsFormsApplication1\bin\Debug\WindowsFormsApplication1.pdb
+H:\GitHub\CS--GUI-Calculator\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csprojResolveAssemblyReference.cache
+H:\GitHub\CS--GUI-Calculator\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Form1.resources
+H:\GitHub\CS--GUI-Calculator\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.Properties.Resources.resources
+H:\GitHub\CS--GUI-Calculator\WindowsFormsApplication1\obj\Debug\WindowsFormsApplication1.csproj.GenerateResource.Cache

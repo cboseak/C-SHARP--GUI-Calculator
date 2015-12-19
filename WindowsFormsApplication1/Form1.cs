@@ -18,7 +18,7 @@ namespace WindowsFormsApplication1
         private static double tempVal = 0;
         private static int lastPressed = 0;
 
-        public bool GoneThroughBefore = false;
+        public static bool firstTime = true;
         StringBuilder sb = new StringBuilder();
               
         public Form1()
@@ -33,7 +33,7 @@ namespace WindowsFormsApplication1
         private void buttonPressed(int x)
         {
             sb.Append(x);
-            textBox1.Text = sb.ToString();
+            ScreenDisplay.Text = sb.ToString();
             tempVal = Convert.ToDouble(sb.ToString());
         }
 
@@ -45,36 +45,32 @@ namespace WindowsFormsApplication1
         private static double calculateFromLast(double temp, double curr, int lastPressed)
         {
             //PERFORMS CALCULATION BASED ON OPERATION IN BETWEEN LAST 2 NUMBERS.
-            //I could have technically done a switch statement but at the time I wasn't sure
-            //if there would be other conditions besides just the last key pressed. Leaving
-            //for now since I might later add other conditions.
-            if (lastPressed == 1)
+
+            switch (lastPressed)
             {
-                curr += temp;
+                case 1:
+                    curr += temp;
+                    break;
+                case 2:
+                    curr -= temp;
+                    break;
+                case 3:
+                    curr = curr * temp;
+                    break;
+                case 4:
+                    try
+                    {
+                        curr = curr / temp;
+                    }
+                    catch (DivideByZeroException ex)
+                    {
+                        MessageBox.Show("Unable to divide by zero, please try again");
+                    }
+                    break;
+                default:
+                    break;                     
             }
-            else if (lastPressed == 2)
-            {
-                curr -= temp;
-            }
-            else if (lastPressed == 3)
-            {
-                curr = currVal * temp;
-            }
-            else if (lastPressed == 4)
-            {
-                if (tempVal != 0)
-                {
-                    curr = currVal / temp;
-                }
-                else
-                {
-                    curr = 0;
-                }
-            }
-            else
-            {
-                curr = 0;
-            }
+
             return curr;
         }
 #endregion
@@ -154,6 +150,7 @@ namespace WindowsFormsApplication1
         //PLUS BUTTON
         private void button14_Click(object sender, EventArgs e)
         {
+            //using a tempVal in try/catch to avoid exceptions if the current SB string is not a valid number
             try
             {
                 tempVal = Convert.ToDouble(sb.ToString());
@@ -164,7 +161,7 @@ namespace WindowsFormsApplication1
             }
             currVal = calculateFromLast(currVal, tempVal, lastPressed);
             
-            textBox1.Text = currVal.ToString();
+            ScreenDisplay.Text = currVal.ToString();
             lastPressed = 1;
             sb.Clear();
         }
@@ -172,6 +169,7 @@ namespace WindowsFormsApplication1
         //MINUS BUTTON
         private void button12_Click(object sender, EventArgs e)
         {
+            //using a tempVal in try/catch to avoid exceptions if the current SB string is not a valid number
             try
             {
                 tempVal = Convert.ToDouble(sb.ToString());
@@ -182,7 +180,7 @@ namespace WindowsFormsApplication1
             }
             currVal = calculateFromLast(currVal, tempVal, lastPressed);
 
-            textBox1.Text = currVal.ToString();
+            ScreenDisplay.Text = currVal.ToString();
             lastPressed = 2;
             sb.Clear();
         }
@@ -196,11 +194,11 @@ namespace WindowsFormsApplication1
             }
             catch
             {
-                tempVal = 544;
+                tempVal = 0;
             }
             currVal = calculateFromLast(currVal, tempVal, lastPressed);
 
-            textBox1.Text = currVal.ToString();
+            ScreenDisplay.Text = currVal.ToString();
             lastPressed = 4;
             sb.Clear();
         }
@@ -218,7 +216,7 @@ namespace WindowsFormsApplication1
             }
             currVal = calculateFromLast(currVal, tempVal, lastPressed);
 
-            textBox1.Text = currVal.ToString();
+            ScreenDisplay.Text = currVal.ToString();
             lastPressed = 3;
             sb.Clear();
         }
@@ -227,7 +225,7 @@ namespace WindowsFormsApplication1
         {
             currVal = calculateFromLast(currVal, tempVal, lastPressed);
 
-            textBox1.Text = currVal.ToString();
+            ScreenDisplay.Text = currVal.ToString();
             sb.Clear();
             lastPressed = 0;
         }
@@ -239,7 +237,7 @@ namespace WindowsFormsApplication1
         //the values.
         private void button16_Click(object sender, EventArgs e)
         {
-            textBox1.Text = "0";
+            ScreenDisplay.Text = "0";
             currVal = 0;
             tempVal = 0;
             lastPressed = 0;
